@@ -1,0 +1,38 @@
+# Created @ 31.12.2010 by TheFox@fox21.at
+
+Description
+	Create AES256 encrypted loop devices (.img files) under Linux.
+
+Requirements
+	- Linux.
+	- Root access.
+	- dd.
+	- losetup.
+
+
+Manual
+
+# create
+dd if=/dev/zero of=./docs.img bs=1GiB count=1
+LOOPDEV=$(losetup -f)
+losetup -Te aes256 $LOOPDEV ./docs.img
+mkfs -t ext3 $LOOPDEV
+
+# mount
+LOOPDEV=$(losetup -f)
+losetup -e aes256 $LOOPDEV ./docs.img
+mount -t ext3 $LOOPDEV ./docs
+
+# umount
+umount $LOOPDEV
+losetup -d $LOOPDEV
+
+# resize
+dd if=/dev/zero bs=1GiB count=1 >> docs.img
+LOOPDEV=$(losetup -f)
+losetup -e aes256 $LOOPDEV ./docs.img
+fsck.ext3 -f $LOOPDEV
+resize2fs $LOOPDEV
+
+
+# EOF
