@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 # Created @ 30.12.2010 by TheFox@fox21.at
-# Version: 1.0.0
+# Version: 1.0.1
 # Copyright (c) 2010 TheFox
 
 # This program is free software: you can redistribute it and/or modify
@@ -27,7 +27,7 @@ use Cwd 'realpath';
 
 $| = 1;
 
-my $VERSION = '1.0.0';
+my $VERSION = '1.0.1';
 my $ENCRYPTION = 'AES256';
 
 
