@@ -28,6 +28,7 @@ use Cwd 'realpath';
 $| = 1;
 
 my $VERSION = '1.0.0';
+my $ENCRYPTION = 'AES256';
 
 
 sub main{
@@ -94,8 +95,8 @@ sub main{
 			chomp($answer = <STDIN>);
 			if($answer =~ /^\d+$/){
 				
-				print "Creating ...\n";
-				qx(dd if=/dev/zero of="$imgpath" bs=1MiB count=$answer);
+				print "Creating. This can take a while ...\n";
+				qx(dd if=/dev/urandom of="$imgpath" bs=1MiB count=$answer);
 				
 				if(-e $imgpath){
 					$error = 0;
@@ -104,7 +105,7 @@ sub main{
 						print "Using loop dev: '$loopdev'\n";
 						
 						print qq(losetup "$loopdev" "$imgpath"\n);
-						if(!system(qq(losetup -T -e aes256 "$loopdev" "$imgpath"))){
+						if(!system(qq(losetup -T -e $ENCRYPTION "$loopdev" "$imgpath"))){
 							
 							print qq(mkfs "$loopdev"\n);
 							if(system(qq(mkfs -t ext3 "$loopdev"))){
@@ -156,7 +157,7 @@ sub main{
 		exit 1;
 		
 		# LOOPDEV=$(losetup -f)
-		# dd if=/dev/zero bs=1GiB count=1 >> file.img
+		# dd if=/dev/urandom bs=1GiB count=1 >> file.img
 		# losetup -e aes256 $LOOPDEV ./file.img
 		# fsck.ext3 -f $LOOPDEV
 		# resize2fs $LOOPDEV
@@ -214,7 +215,7 @@ sub main{
 			print "Using loop dev: '$loopdev'\n";
 			
 			print qq(losetup "$loopdev" "$imgpath"\n);
-			if(!system(qq(losetup -e aes256 "$loopdev" "$imgpath"))){
+			if(!system(qq(losetup -e $ENCRYPTION "$loopdev" "$imgpath"))){
 				
 				print qq(mount "$loopdev" "$dirpath"\n);
 				if(!system(qq(mount -t ext3 "$loopdev" "$dirpath"))){

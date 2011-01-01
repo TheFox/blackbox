@@ -13,7 +13,7 @@ Requirements
 Manual
 
 # create
-dd if=/dev/zero of=./docs.img bs=1GiB count=1
+dd if=/dev/urandom of=./docs.img bs=1GiB count=1
 LOOPDEV=$(losetup -f)
 losetup -Te aes256 $LOOPDEV ./docs.img
 mkfs -t ext3 $LOOPDEV
@@ -28,7 +28,7 @@ umount $LOOPDEV
 losetup -d $LOOPDEV
 
 # resize
-dd if=/dev/zero bs=1GiB count=1 >> docs.img
+dd if=/dev/urandom bs=1GiB count=1 >> docs.img
 LOOPDEV=$(losetup -f)
 losetup -e aes256 $LOOPDEV ./docs.img
 fsck.ext3 -f $LOOPDEV
