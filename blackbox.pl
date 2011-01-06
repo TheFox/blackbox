@@ -208,7 +208,10 @@ sub main{
 					exit 1;
 				}
 			}
-			
+			if(!-d $dirpath){
+				print STDERR "FATAL ERROR: '$dirpath': No such directory.\n";
+				exit 1;
+			}
 			
 			print "Image file: '$imgpath'\nMount directory: '$dirpath'\n";
 			$loopdev = losetupFind();
