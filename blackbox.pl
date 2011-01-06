@@ -164,7 +164,7 @@ sub main{
 	}
 	elsif($modeMount){
 		
-		if(-e $imgpath){
+		if(-e $imgpath && -f $imgpath){
 			
 			if($dirpath eq ''){
 				my $imgpathBasename = basename($imgpath);
