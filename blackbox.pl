@@ -29,6 +29,8 @@ $| = 1;
 
 my $VERSION = '1.0.1';
 my $ENCRYPTION = 'AES256';
+my $IMG_SIZE_BASE = 1024 * 1024;
+my $IMG_SIZE_MIN = 10;
 
 
 sub main{
@@ -95,12 +97,17 @@ sub main{
 			chomp($answer = <STDIN>);
 			if($answer =~ /^\d+$/){
 				
+				if($answer < $IMG_SIZE_MIN){
+					print STDERR "FATAL ERROR: The img file must be at least $IMG_SIZE_MIN MiB big.\n";
+					exit 1;
+				}
+				
 				print "Creating. This can take a while ...\n";
 				qx(dd if=/dev/urandom of="$imgpath" bs=1MiB count=$answer);
 				
 				if(-e $imgpath){
 					$error = 0;
-					if(-s $imgpath == 1024 * 1024 * $answer){
+					if(-s $imgpath == $IMG_SIZE_BASE * $answer){
 						$loopdev = losetupFind();
 						print "Using loop dev: '$loopdev'\n";
 						
@@ -165,6 +172,11 @@ sub main{
 	elsif($modeMount){
 		
 		if(-e $imgpath && -f $imgpath){
+			
+			if(-s $imgpath < $IMG_SIZE_BASE * $IMG_SIZE_MIN){
+				print STDERR "FATAL ERROR: '$imgpath' too small.\n";
+				exit 1;
+			}
 			
 			if($dirpath eq ''){
 				my $imgpathBasename = basename($imgpath);
