@@ -33,6 +33,7 @@ LOOPDEV=$(losetup -f)
 losetup -e aes256 $LOOPDEV ./docs.img
 fsck.ext3 -f $LOOPDEV
 resize2fs $LOOPDEV
+losetup -d $LOOPDEV
 
 
 # EOF
