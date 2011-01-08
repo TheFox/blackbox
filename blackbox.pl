@@ -47,6 +47,8 @@ sub main{
 	my $modeMount = 0;
 	my $modeUmount = 0;
 	my $modeYes = 0;
+	my $modeAll = 0;
+	my $modeBackup = 0;
 	my $imgpath = '';
 	my $dirpath = '';
 	my $answer = '';
@@ -70,6 +72,12 @@ sub main{
 			elsif($arg eq '-y'){
 				$modeYes = 1;
 			}
+			elsif($arg eq '-a'){
+				$modeAll = 1;
+			}
+			elsif($arg eq '-b'){
+				$modeBackup = 1;
+			}
 			else{
 				$imgpath = $arg;
 				if(@ARGV){
@@ -82,11 +90,12 @@ sub main{
 	else{
 		usagePrint();
 	}
-	if(!$modeCreate && !$modeResize && !$modeMount && !$modeUmount || $imgpath eq ''){
-		usagePrint();
-	}
 	
 	if($modeCreate){
+		if($imgpath eq ''){
+			print STDERR "FATAL ERROR: Invalid image path.\n";
+			exit 1;
+		}
 		if($imgpath !~ /.img$/){
 			$imgpath .= '.img';
 		}
@@ -122,7 +131,7 @@ sub main{
 							
 							print qq(losetup -d "$loopdev"\n);
 							if(!system(qq(losetup -d "$loopdev"))){
-								print qq(OK. '$imgpath' created.\n\nNow you can mount the image with the following command:\n$0 -m "$imgpath"\n);
+								print qq(OK.\n'$imgpath' created.\n\nNow you can mount the image with the following command:\n$0 -m "$imgpath"\n);
 							}
 							else{
 								print STDERR "FATAL ERROR: 'losetup -d' failed.\n";
@@ -170,7 +179,10 @@ sub main{
 		# resize2fs $LOOPDEV
 	}
 	elsif($modeMount){
-		
+		if($imgpath eq ''){
+			print STDERR "FATAL ERROR: Invalid image path.\n";
+			exit 1;
+		}
 		if(-e $imgpath && -f $imgpath){
 			
 			if(-s $imgpath < $IMG_SIZE_BASE * $IMG_SIZE_MIN){
@@ -206,7 +218,7 @@ sub main{
 			}
 			
 			if(!-e $dirpath){
-				print "The directory '$dirpath' doesn't exist. Create?";
+				print "The directory '$dirpath' doesn't exist.\nCreate?";
 				if(input()){
 					mkdir $dirpath;
 					if(!-e $dirpath){
@@ -252,7 +264,10 @@ sub main{
 		}
 	}
 	elsif($modeUmount){
-		
+		if($imgpath eq ''){
+			print STDERR "FATAL ERROR: Invalid image path.\n";
+			exit 1;
+		}
 		print qq(umount "$imgpath"\n);
 		if(!system(qq(umount "$imgpath"))){
 		
@@ -270,19 +285,44 @@ sub main{
 			exit 1;
 		}
 	}
+	elsif($modeAll){
+		if(system(qq(losetup -a))){
+			print STDERR "FATAL ERROR: losetup failed.\n";
+			exit 1;
+		}
+	}
+	else{
+		usagePrint();
+	}
 	
 	1;
 }
 
 sub usagePrint{
-	print STDERR "Usage: ".basename($0)." -c|-m|-u FILE/DEVICE [DIRECTORY]\n\t-c = Create a new image.\n\t-m = Mount an existing image.\n\t-u Unmount an image.\n\n\tFILE = Path to the image file (.img).\n\tDEVICE = Is only used in combination with '-u'.\n\tDIRECTORY = Path to the mount directory.\n";
+	my $bn = basename($0);
+	print STDERR 
+		"Usage:\n".
+		"$bn -c FILE\n".
+		"$bn -m FILE [DIRECTORY]\n".
+		"$bn -u DEVICE\n".
+		"$bn -a\n".
+		"\n".
+		"\t-c = Create a new image.\n".
+		"\t-m = Mount an existing image.\n".
+		"\t-u = Unmount an image.\n".
+		"\t-a = Alias for 'losetup -a'.\n".
+		"\n".
+		"\tFILE = Path to the image file (.img).\n".
+		"\tDEVICE = Is only used in combination with '-u'.\n".
+		"\tDIRECTORY = Path to the mount directory.\n"
+	;
 	exit 1;
 }
 
 sub input{
 	my $rv = 0;
 	
-	print ' [yn] ';
+	print ' [yN] ';
 	my $k = <STDIN>;
 	chomp $k;
 	$k = lc $k;
