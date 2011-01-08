@@ -23,6 +23,7 @@
 use strict;
 use FindBin;
 use File::Basename;
+use File::Copy;
 use Cwd 'realpath';
 
 $| = 1;
@@ -236,6 +237,15 @@ sub main{
 				print STDERR "FATAL ERROR: '$dirpath': No such directory.\n";
 				exit 1;
 			}
+			if($modeBackup){
+				print "Make backup ...\n";
+				if(copy($imgpath, "$imgpath.bak")){
+					print "Backup OK.\n";
+				}
+				else{
+					print STDERR "Backup failed.\n";
+				}
+			}
 			
 			print "Image file: '$imgpath'\nMount directory: '$dirpath'\n";
 			$loopdev = losetupFind();
@@ -303,12 +313,13 @@ sub usagePrint{
 	print STDERR 
 		"Usage:\n".
 		"$bn -c FILE\n".
-		"$bn -m FILE [DIRECTORY]\n".
+		"$bn -m [-b] FILE [DIRECTORY]\n".
 		"$bn -u DEVICE\n".
 		"$bn -a\n".
 		"\n".
 		"\t-c = Create a new image.\n".
 		"\t-m = Mount an existing image.\n".
+		"\t-b = Backup the image file.\n".
 		"\t-u = Unmount an image.\n".
 		"\t-a = Alias for 'losetup -a'.\n".
 		"\n".
