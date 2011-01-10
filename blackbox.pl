@@ -253,13 +253,18 @@ sub main{
 			
 			print qq(losetup "$loopdev" "$imgpath"\n);
 			if(!system(qq(losetup -e $ENCRYPTION "$loopdev" "$imgpath"))){
-				
 				print qq(mount "$loopdev" "$dirpath"\n);
 				if(!system(qq(mount -t ext3 "$loopdev" "$dirpath"))){
 					print qq(OK\n\nTo close the image use the following command:\n$0 -u "$loopdev"\n);
 				}
 				else{
 					print STDERR "FATAL ERROR: mount failed.\n";
+					
+					print qq(losetup -d "$loopdev"\n);
+					if(system(qq(losetup -d "$loopdev"))){
+						print STDERR "ERROR: losetup failed.\n";
+					}
+					
 					exit 1;
 				}
 			}
@@ -280,7 +285,6 @@ sub main{
 		}
 		print qq(umount "$imgpath"\n);
 		if(!system(qq(umount "$imgpath"))){
-		
 			print qq(losetup -d "$imgpath"\n);
 			if(!system(qq(losetup -d "$imgpath"))){
 				print "OK\n";
