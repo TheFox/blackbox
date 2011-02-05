@@ -13,24 +13,28 @@ Requirements
 Manual
 
 # create
-dd if=/dev/urandom of=./docs.img bs=1GiB count=1
+IMGPATH=./.secure.img
+dd if=/dev/urandom of=$IMGPATH bs=2k count=5M
 LOOPDEV=$(losetup -f)
-losetup -Te aes256 $LOOPDEV ./docs.img
+losetup -Te aes256 $LOOPDEV $IMGPATH
 mkfs -t ext3 $LOOPDEV
 
 # mount
+IMGPATH=./.secure.img
+MOUNTDIR=./secure
 LOOPDEV=$(losetup -f)
-losetup -e aes256 $LOOPDEV ./docs.img
-mount -t ext3 $LOOPDEV ./docs
+losetup -e aes256 $LOOPDEV $IMGPATH
+mount -t ext3 $LOOPDEV $MOUNTDIR
 
 # umount
 umount $LOOPDEV
 losetup -d $LOOPDEV
 
 # resize
-dd if=/dev/urandom bs=1GiB count=1 >> docs.img
+IMGPATH=./.secure.img
+dd if=/dev/urandom bs=2k count=5M >> $IMGPATH
 LOOPDEV=$(losetup -f)
-losetup -e aes256 $LOOPDEV ./docs.img
+losetup -e aes256 $LOOPDEV $IMGPATH
 fsck.ext3 -f $LOOPDEV
 resize2fs $LOOPDEV
 losetup -d $LOOPDEV
