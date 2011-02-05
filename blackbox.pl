@@ -32,6 +32,7 @@ my $VERSION = '1.1.1';
 my $ENCRYPTION = 'AES256';
 my $IMG_SIZE_BASE = 1024 * 1024;
 my $IMG_SIZE_MIN = 10;
+my $DD_BS = 2048;
 
 
 sub main{
@@ -112,8 +113,9 @@ sub main{
 					exit 1;
 				}
 				
+				my $count = $answer * 1024 / $DD_BS * 1024;
 				print "Creating. This can take a while ...\n";
-				qx(dd if=/dev/urandom of="$imgpath" bs=1MiB count=$answer);
+				qx(dd if=/dev/urandom of="$imgpath" bs=$DD_BS count=$count);
 				
 				if(-e $imgpath){
 					$error = 0;
