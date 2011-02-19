@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 # Created @ 30.12.2010 by TheFox@fox21.at
-# Version: 1.2.0
+# Version: 1.2.1
 # Copyright (c) 2010 TheFox
 
 # This program is free software: you can redistribute it and/or modify
@@ -28,7 +28,7 @@ use Cwd 'realpath';
 
 $| = 1;
 
-my $VERSION = '1.2.0';
+my $VERSION = '1.2.1';
 my $ENCRYPTION = 'AES256';
 my $IMG_SIZE_BASE = 1024 * 1024;
 my $IMG_SIZE_MIN = 10;
@@ -215,7 +215,7 @@ sub main{
 			}
 			$dirpath = realpath($dirpath);
 			
-			if(!system(qq(mount | grep "$dirpath"))){
+			if(!system(qq(mount | grep "$dirpath" &> /dev/null))){
 				print STDERR "FATAL ERROR: '$dirpath' is already mounted.\n";
 				exit 1;
 			}
