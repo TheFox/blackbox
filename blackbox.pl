@@ -37,8 +37,6 @@ my $DD_BS = 2048;
 
 sub main{
 	
-	chdir $FindBin::Bin;
-	
 	print "blackbox $VERSION\nCopyright (c) 2010 TheFox\@fox21.at\nUSE AT YOUR OWN RISK!!!\n\n";
 	if($<){
 		print "It's recommended to run this script as root.\n\n";
