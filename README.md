@@ -1,7 +1,5 @@
 # Blackbox
-Create AES256 encrypted loop devices (.img files) under Linux.
-
-Visit [fox21.at](http://fox21.at).
+Create [AES](http://en.wikipedia.org/wiki/Advanced_Encryption_Standard) 256 bit encrypted loop devices (.img files) under [Linux](http://www.linux.org/).
 
 ## Requirements
 - Linux
