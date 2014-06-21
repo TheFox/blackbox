@@ -8,7 +8,7 @@ Create [AES](http://en.wikipedia.org/wiki/Advanced_Encryption_Standard) 256 bit 
 - losetup
 
 ## Manual
-### create
+### Create
 ```
 IMGPATH=./.secure.img
 dd if=/dev/urandom of=$IMGPATH bs=2k count=5M
@@ -17,7 +17,7 @@ losetup -Te aes256 $LOOPDEV $IMGPATH
 mkfs -t ext3 $LOOPDEV
 ```
 
-### mount
+### Mount
 ```
 IMGPATH=./.secure.img
 MOUNTDIR=./secure
@@ -26,13 +26,13 @@ losetup -e aes256 $LOOPDEV $IMGPATH
 mount -t ext3 $LOOPDEV $MOUNTDIR
 ```
 
-### umount
+### Umount
 ```
 umount $LOOPDEV
 losetup -d $LOOPDEV
 ```
 
-### resize
+### Resize
 ```
 IMGPATH=./.secure.img
 dd if=/dev/urandom bs=2k count=5M >> $IMGPATH
