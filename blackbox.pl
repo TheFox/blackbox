@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w
-# Created @ 30.12.2010 by TheFox@fox21.at
+# Created @ 30.12.2010
 # Version: 1.2.2
-# Copyright (c) 2010 TheFox
+# Copyright (C) 2010 Christian Mayer <http://fox21.at>
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
