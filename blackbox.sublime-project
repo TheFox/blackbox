@@ -3,10 +3,8 @@
 		{
 			"path": ".",
 			"name": "Blackbox",
-			"folder_exclude_patterns": [],
-			"file_exclude_patterns": [
-				"*.swp", "*.sublime-workspace", "composer.lock"
-			]
+			"folder_exclude_patterns": [ ],
+			"file_exclude_patterns": [ ]
 		}
 	]
 }
